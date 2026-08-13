@@ -1,22 +1,26 @@
-# Service Link Uganda — Static Website
+# Service Link Uganda — Static Website (expanded)
 
-This repository now contains a modern, animated single-page website for Service Link Uganda.
+I updated the site so clients can browse many services by category and search. The site now:
 
-Files added:
-- index.html — main page
-- styles.css — styling and animations
-- script.js — small JS for interactions (copy links, search, theme toggle)
+- Loads services from services.json (so you can add many entries without editing HTML).
+- Shows category chips (All, Computer, Engineering, Construction, Healthcare, Government, Finance, Agriculture, etc.).
+- Filters links by category and search query.
+- Preserves previous features: copy-to-clipboard, open-in-new-tab, animated reveal, theme toggle, and toast messages.
 
-How to use
-1. Open index.html in a browser to view locally.
-2. Customize the link cards in index.html to add your own services and icons.
-3. To publish, enable GitHub Pages in repository Settings and set the source to the `main` branch (root). The site will be available at https://<your-username>.github.io/service-link-uganda/
+Files changed/added:
+- index.html — updated to include category toolbar and dynamic grid
+- script.js — now fetches services.json and renders cards with filtering
+- styles.css — small styles for category chips
+- services.json — many sample services across categories
+- README.md — updated to reflect the dynamic approach
 
-Next suggestions
-- Replace placeholder links with the real service URLs.
-- Add SVG icons or use an icon library for a more polished look.
-- Add analytics, contact form, or social links as needed.
+How to add services
+- Edit services.json and add objects with: name, url, category, description, icon, tags.
+- The site automatically picks up new entries.
 
-If you want, I can:
-- Add more sample cards from a CSV or JSON list.
-- Convert this to a small SPA with deploy scripts.
+Want me to:
+- Import services from a CSV or Google Sheet and convert to services.json.
+- Add pagination or infinite scroll for very large lists.
+- Add categories count badges and sorting (alphabetical or popularity).
+
+Tell me which enhancement you want next and I’ll add it.
