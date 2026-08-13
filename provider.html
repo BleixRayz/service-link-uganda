@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Provider Dashboard — Service Link Uganda</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .auth-panel{max-width:760px;margin:28px auto;padding:20px;background:rgba(255,255,255,0.02);border-radius:12px}
+    form label{display:block;margin:8px 0}
+    input,select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .row{display:flex;gap:12px}
+    .row > *{flex:1}
+    .uploads{margin-top:18px}
+    .upload-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-bottom:8px}
+    .upload-item video{max-width:160px;border-radius:6px}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="/">Service Link<span class="accent">UG</span></a>
+      <div class="actions">
+        <button id="signOutBtn" class="btn ghost" style="display:none">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="auth-panel">
+      <h2 id="welcome">Provider sign in / register</h2>
+
+      <div id="authForms">
+        <form id="signupForm">
+          <h3>Register</h3>
+          <label>Email <input name="email" type="email" required></label>
+          <label>Password <input name="password" type="password" required minlength="6"></label>
+          <div class="row"><button class="btn" type="submit">Create account</button><button id="toggleToSignIn" class="btn ghost" type="button">Have an account? Sign in</button></div>
+        </form>
+
+        <form id="signinForm" style="display:none">
+          <h3>Sign in</h3>
+          <label>Email <input name="email" type="email" required></label>
+          <label>Password <input name="password" type="password" required></label>
+          <div class="row"><button class="btn" type="submit">Sign in</button><button id="toggleToSignUp" class="btn ghost" type="button">Create account</button></div>
+        </form>
+      </div>
+
+      <div id="dashboard" style="display:none">
+        <h3>Your dashboard</h3>
+        <p class="muted">Upload short clips or videos about your services. Files are stored in Firebase Storage; metadata is saved to Firestore.</p>
+
+        <form id="uploadForm">
+          <label>Title <input name="title" required></label>
+          <label>Category <select name="category"><option>Computer</option><option>Engineering</option><option>Construction</option><option>Healthcare</option><option>Education</option><option>Business</option></select></label>
+          <label>Description <textarea name="description" rows="3"></textarea></label>
+          <label>Clip <input id="clipInput" name="clip" type="file" accept="video/*" required></label>
+          <div style="display:flex;gap:8px;margin-top:8px"><button class="btn" type="submit">Upload clip</button><button id="clearForm" type="button" class="btn ghost">Clear</button></div>
+        </form>
+
+        <div id="progress" style="display:none;margin-top:12px">Uploading: <span id="pct">0%</span></div>
+
+        <div class="uploads">
+          <h4>Your uploads</h4>
+          <div id="uploadsList"></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="muted">Keep your uploads under recommended size (e.g., 100MB) for best performance.</p>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+  <script src="firebase-config.js"></script>
+  <script type="module" src="provider.js"></script>
+</body>
+</html>
