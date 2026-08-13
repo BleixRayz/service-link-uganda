@@ -1,62 +1,22 @@
-## Firebase setup for provider auth & uploads
+## Firebase + AI + WhatsApp notes
 
-I added a provider dashboard (provider.html) with sign-up/sign-in and a dashboard where authenticated providers can upload video clips, preview them, and manage (delete) their uploads. The implementation uses Firebase Authentication, Firebase Storage, and Firestore.
+I added AI and WhatsApp support to the provider dashboard. Summary:
 
-Files added:
-- provider.html — provider sign-up/sign-in & dashboard UI
-- provider.js — client code (Firebase init, auth, storage upload, Firestore)
-- firebase-config.js — placeholder file where you must paste your Firebase config
+- AI assistant
+  - The provider dashboard includes an AI panel where providers can enter a prompt and request generated text (description) and tags.
+  - The dashboard expects an AI endpoint URL in `window.FIREBASE_CONFIG.aiEndpoint` (set this in `firebase-config.js`). The endpoint should accept a POST JSON body { prompt, title, category } and return JSON like { text: "generated description", tags: ["tag1","tag2"] }.
+  - I did not include an AI API key in the repo. You can implement a simple serverless function (Vercel/Netlify/AWS Lambda) that proxies to OpenAI or another model provider and add its URL to firebase-config.js.
 
-How to enable (step-by-step)
-1. Create a Firebase project at https://console.firebase.google.com/
-2. Enable Authentication → Sign-in method → Email/Password (optionally enable Google provider).
-3. Enable Firestore Database (start in test mode during development) and create a collection `clips` (no documents required).
-4. Enable Storage and note the storage bucket name.
-5. Copy your Firebase web config (Project Settings → General → Your apps → Firebase SDK snippet) and paste it into firebase-config.js replacing the window.FIREBASE_CONFIG object.
+- WhatsApp contact
+  - Providers can save a contact phone (international number, e.g., 2567...) in the dashboard profile area (saved to Firestore collection `providers` document <uid>).
+  - Each uploaded clip in the provider's list includes a WhatsApp button that opens a chat with a templated message including the clip title.
 
-Example firebase-config.js
-```
-window.FIREBASE_CONFIG = {
-  apiKey: "...",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "...",
-  appId: "1:...:web:..."
-};
-```
+Security & Operational notes
+- AI endpoint: do not expose raw API keys from model providers in client-side code. Host a small serverless proxy that adds your API key server-side and call that endpoint from the dashboard.
+- Storage & costs: large video uploads may incur costs. Consider size limits, retention periods or using lower-tier storage for older clips.
 
-Recommended security rules (example)
+If you want, I can:
+- Add an example serverless function (Node.js) that proxies to OpenAI's completion API and transforms responses into { text, tags }.
+- Add Google Sign-In and/or admin approval flow for public listing of clips.
+- Add server-side thumbnail generation (Cloud Functions) to improve page load.
 
-Firestore rules (allow owners to read/write their clips):
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /clips/{docId} {
-      allow create: if request.auth != null && request.resource.data.owner == request.auth.uid;
-      allow read: if request.auth != null && resource.data.owner == request.auth.uid;
-      allow update, delete: if request.auth != null && resource.data.owner == request.auth.uid;
-    }
-  }
-}
-```
-
-Storage rules (allow owners to write under their user folder):
-```
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /clips/{userId}/{allPaths=**} {
-      allow read: if true; // public read for playback; make more restrictive if needed
-      allow write: if request.auth != null && request.auth.uid == userId;
-    }
-  }
-}
-```
-
-Notes & next steps
-- The site currently expects the firebase-config.js file to contain a window.FIREBASE_CONFIG object. Paste your config and reload provider.html.
-- Consider stricter Firestore/Storage rules for production; the examples above are starting points.
-- If you want public clips to appear on the main site, I can add a moderation/approval flow: new uploads are flagged as `pending` and an admin UI approves them to be shown publicly.
-- I can also add Google Sign-In or link provider profiles for richer metadata.

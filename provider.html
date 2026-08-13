@@ -15,6 +15,10 @@
     .upload-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-bottom:8px}
     .upload-item video{max-width:160px;border-radius:6px}
     .muted{color:var(--muted)}
+    .profile-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .ai-panel{margin-top:12px;padding:12px;border-radius:8px;border:1px dashed rgba(255,255,255,0.04)}
+    .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+    .chip{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03)}
   </style>
 </head>
 <body>
@@ -51,10 +55,25 @@
         <h3>Your dashboard</h3>
         <p class="muted">Upload short clips or videos about your services. Files are stored in Firebase Storage; metadata is saved to Firestore.</p>
 
+        <div class="profile-row">
+          <label style="flex:1">Contact phone (international, e.g. 2567xxxxxxxx) <input id="phoneInput" placeholder="2567..." /></label>
+          <button id="saveProfile" class="btn ghost">Save profile</button>
+        </div>
+
         <form id="uploadForm">
           <label>Title <input name="title" required></label>
           <label>Category <select name="category"><option>Computer</option><option>Engineering</option><option>Construction</option><option>Healthcare</option><option>Education</option><option>Business</option></select></label>
           <label>Description <textarea name="description" rows="3"></textarea></label>
+          <label>Tags (comma-separated) <input name="tags" placeholder="tag1, tag2"></label>
+
+          <div class="ai-panel">
+            <strong>AI assistant</strong>
+            <p class="muted">Use AI to generate a description and suggested tags. You need to configure an AI endpoint in firebase-config.js (aiEndpoint).</p>
+            <textarea id="aiPrompt" placeholder="Describe what you'd like the AI to generate (e.g., marketing blurb, short description)..." rows="3"></textarea>
+            <div style="display:flex;gap:8px;margin-top:8px"><button id="aiGenerate" type="button" class="btn">Generate</button><button id="applyAi" type="button" class="btn ghost">Apply to description</button></div>
+            <div id="aiSuggestions" style="margin-top:10px"></div>
+          </div>
+
           <label>Clip <input id="clipInput" name="clip" type="file" accept="video/*" required></label>
           <div style="display:flex;gap:8px;margin-top:8px"><button class="btn" type="submit">Upload clip</button><button id="clearForm" type="button" class="btn ghost">Clear</button></div>
         </form>
