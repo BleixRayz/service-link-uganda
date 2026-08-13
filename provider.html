@@ -3,95 +3,655 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Provider Dashboard — Service Link Uganda</title>
+  <title>Provider Portal — Service Link Uganda</title>
+  <meta name="description" content="Register as a service provider and upload your work portfolio on Service Link Uganda." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .auth-panel{max-width:760px;margin:28px auto;padding:20px;background:rgba(255,255,255,0.02);border-radius:12px}
-    form label{display:block;margin:8px 0}
-    input,select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-    .row{display:flex;gap:12px}
-    .row > *{flex:1}
-    .uploads{margin-top:18px}
-    .upload-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);margin-bottom:8px}
-    .upload-item video{max-width:160px;border-radius:6px}
-    .muted{color:var(--muted)}
-    .profile-row{display:flex;gap:8px;align-items:center;margin-top:8px}
-    .ai-panel{margin-top:12px;padding:12px;border-radius:8px;border:1px dashed rgba(255,255,255,0.04)}
-    .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-    .chip{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03)}
+    /* Provider-specific styles */
+    .breadcrumb {
+      position: relative;
+      z-index: 2;
+      padding: 12px 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-panel {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 32px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .auth-panel h2 {
+      font-size: 1.8rem;
+      margin: 0 0 12px;
+      background: linear-gradient(135deg, var(--accent-secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .auth-panel > p {
+      color: var(--muted);
+      margin: 0 0 28px;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .auth-forms-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    form {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    form h3 {
+      margin: 0 0 20px;
+      font-size: 1.3rem;
+      color: #e6eef6;
+      font-weight: 700;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    form input,
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: inherit;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      margin-top: 6px;
+    }
+
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(110, 231, 183, 0.2);
+    }
+
+    form input::placeholder,
+    form textarea::placeholder {
+      color: rgba(154, 164, 178, 0.5);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-row.full {
+      grid-template-columns: 1fr;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn-group button {
+      flex: 1;
+    }
+
+    /* Dashboard styles */
+    .dashboard {
+      display: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, rgba(110, 231, 183, 0.1), rgba(155, 231, 255, 0.1));
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(110, 231, 183, 0.2);
+      margin-bottom: 32px;
+    }
+
+    .dashboard-header h3 {
+      margin: 0 0 12px;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .profile-section {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .profile-section h4 {
+      margin: 0 0 16px;
+      color: var(--accent-secondary);
+      font-size: 1.1rem;
+    }
+
+    .profile-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .profile-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .profile-field label {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .profile-field input {
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      color: inherit;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .profile-field input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent);
+    }
+
+    .upload-section {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 24px;
+    }
+
+    .upload-section h4 {
+      margin: 0 0 20px;
+      color: var(--accent-secondary);
+      font-size: 1.1rem;
+    }
+
+    .upload-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .upload-form-row.full {
+      grid-template-columns: 1fr;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      display: none;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 16px;
+      border: 2px dashed rgba(110, 231, 183, 0.3);
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(110, 231, 183, 0.02);
+    }
+
+    .file-input-label:hover {
+      border-color: var(--accent);
+      background: rgba(110, 231, 183, 0.08);
+    }
+
+    .file-input-label strong {
+      display: block;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .file-input-label span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .uploads-list {
+      margin-top: 24px;
+    }
+
+    .uploads-list h4 {
+      margin: 0 0 16px;
+      color: var(--accent-secondary);
+      font-size: 1.1rem;
+    }
+
+    .upload-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: all 0.3s ease;
+    }
+
+    .upload-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(110, 231, 183, 0.3);
+    }
+
+    .upload-item-preview {
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .upload-item-preview video,
+    .upload-item-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .upload-item-content {
+      flex: 1;
+    }
+
+    .upload-item-title {
+      margin: 0 0 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #e6eef6;
+    }
+
+    .upload-item-meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .upload-item-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background: linear-gradient(135deg, rgba(110, 231, 183, 0.2), rgba(155, 231, 255, 0.2));
+      border: 1px solid rgba(110, 231, 183, 0.3);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    .upload-item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      border: 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+
+    .progress-bar {
+      display: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-bar.active {
+      display: block;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .info-box {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .auth-forms-container {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-panel {
+        padding: 20px;
+      }
+
+      .profile-fields {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-item {
+        flex-direction: column;
+      }
+
+      .upload-item-preview {
+        width: 100%;
+        height: 200px;
+      }
+    }
   </style>
 </head>
 <body>
   <header class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="/">Service Link<span class="accent">UG</span></a>
+      <a class="brand" href="index.html">Service Link<span class="accent">UG</span></a>
       <div class="actions">
         <button id="signOutBtn" class="btn ghost" style="display:none">Sign out</button>
       </div>
     </div>
   </header>
 
-  <main class="container">
+  <main>
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">← Back to home</a>
+      </div>
+    </div>
+
     <section class="auth-panel">
-      <h2 id="welcome">Provider sign in / register</h2>
-
       <div id="authForms">
-        <form id="signupForm">
-          <h3>Register</h3>
-          <label>Email <input name="email" type="email" required></label>
-          <label>Password <input name="password" type="password" required minlength="6"></label>
-          <div class="row"><button class="btn" type="submit">Create account</button><button id="toggleToSignIn" class="btn ghost" type="button">Have an account? Sign in</button></div>
-        </form>
+        <h2>Provider Portal</h2>
+        <p>Join Service Link Uganda! Register your business and showcase your services to thousands of potential clients.</p>
 
-        <form id="signinForm" style="display:none">
-          <h3>Sign in</h3>
-          <label>Email <input name="email" type="email" required></label>
-          <label>Password <input name="password" type="password" required></label>
-          <div class="row"><button class="btn" type="submit">Sign in</button><button id="toggleToSignUp" class="btn ghost" type="button">Create account</button></div>
-        </form>
+        <div class="auth-forms-container">
+          <form id="signupForm">
+            <h3>Create Account</h3>
+            <label>
+              Business Name
+              <input name="businessName" type="text" placeholder="Your business name" required>
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" placeholder="your@email.com" required>
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" placeholder="Minimum 6 characters" required minlength="6">
+            </label>
+            <label>
+              Confirm Password
+              <input name="confirmPassword" type="password" placeholder="Confirm your password" required>
+            </label>
+            <label>
+              <input type="checkbox" name="terms" required style="width:auto">
+              I agree to the terms and conditions
+            </label>
+            <div class="btn-group">
+              <button class="btn" type="submit">Create Account</button>
+              <button id="toggleToSignIn" class="btn ghost" type="button">Sign in instead</button>
+            </div>
+          </form>
+
+          <form id="signinForm" style="display:none">
+            <h3>Sign In</h3>
+            <label>
+              Email
+              <input name="email" type="email" placeholder="your@email.com" required>
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" placeholder="Enter your password" required>
+            </label>
+            <label>
+              <input type="checkbox" name="rememberMe" style="width:auto">
+              Remember me
+            </label>
+            <div class="btn-group">
+              <button class="btn" type="submit">Sign In</button>
+              <button id="toggleToSignUp" class="btn ghost" type="button">Create account</button>
+            </div>
+            <p class="muted" style="font-size:0.85rem;margin-top:12px">
+              Forgot your password? <a href="#" style="color:var(--accent)">Reset here</a>
+            </p>
+          </form>
+        </div>
       </div>
 
-      <div id="dashboard" style="display:none">
-        <h3>Your dashboard</h3>
-        <p class="muted">Upload short clips or videos about your services. Files are stored in Firebase Storage; metadata is saved to Firestore.</p>
-
-        <div class="profile-row">
-          <label style="flex:1">Contact phone (international, e.g. 2567xxxxxxxx) <input id="phoneInput" placeholder="2567..." /></label>
-          <button id="saveProfile" class="btn ghost">Save profile</button>
+      <div id="dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <h3>Welcome, <span id="businessNameDisplay">Service Provider</span>!</h3>
+          <p class="muted">Manage your profile and upload your work to showcase your services.</p>
         </div>
 
-        <form id="uploadForm">
-          <label>Title <input name="title" required></label>
-          <label>Category <select name="category"><option>Computer</option><option>Engineering</option><option>Construction</option><option>Healthcare</option><option>Education</option><option>Business</option></select></label>
-          <label>Description <textarea name="description" rows="3"></textarea></label>
-          <label>Tags (comma-separated) <input name="tags" placeholder="tag1, tag2"></label>
-
-          <div class="ai-panel">
-            <strong>AI assistant</strong>
-            <p class="muted">Use AI to generate a description and suggested tags. You need to configure an AI endpoint in firebase-config.js (aiEndpoint).</p>
-            <textarea id="aiPrompt" placeholder="Describe what you'd like the AI to generate (e.g., marketing blurb, short description)..." rows="3"></textarea>
-            <div style="display:flex;gap:8px;margin-top:8px"><button id="aiGenerate" type="button" class="btn">Generate</button><button id="applyAi" type="button" class="btn ghost">Apply to description</button></div>
-            <div id="aiSuggestions" style="margin-top:10px"></div>
+        <!-- Profile Section -->
+        <div class="profile-section">
+          <h4>📋 Your Profile</h4>
+          <div class="profile-fields">
+            <div class="profile-field">
+              <label>Business Name</label>
+              <input id="profileBusinessName" type="text" placeholder="Business name">
+            </div>
+            <div class="profile-field">
+              <label>Phone Number (International format, e.g., 256XXXXXXXXX)</label>
+              <input id="profilePhone" type="tel" placeholder="256..." maxlength="20">
+            </div>
+            <div class="profile-field">
+              <label>Service Category</label>
+              <select id="profileCategory">
+                <option value="">Select a category</option>
+                <option value="Computer">Computer</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Construction">Construction</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Education">Education</option>
+                <option value="Legal">Legal</option>
+                <option value="Finance">Finance</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Transport">Transport</option>
+                <option value="Business">Business</option>
+                <option value="Hospitality">Hospitality</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="profile-field">
+              <label>Website/Social Media (Optional)</label>
+              <input id="profileWebsite" type="url" placeholder="https://...">
+            </div>
+            <div class="profile-field" style="grid-column: 1 / -1;">
+              <label>Business Description</label>
+              <textarea id="profileDescription" rows="3" placeholder="Tell us about your services..."></textarea>
+            </div>
           </div>
+          <div style="display: flex; gap: 12px; margin-top: 16px;">
+            <button id="saveProfile" class="btn">Save Profile</button>
+          </div>
+        </div>
 
-          <label>Clip <input id="clipInput" name="clip" type="file" accept="video/*" required></label>
-          <div style="display:flex;gap:8px;margin-top:8px"><button class="btn" type="submit">Upload clip</button><button id="clearForm" type="button" class="btn ghost">Clear</button></div>
-        </form>
+        <!-- Upload Section -->
+        <div class="upload-section">
+          <h4>📸 Upload Your Work</h4>
+          <p class="info-box">
+            <strong>ℹ️ Showcase your work:</strong> Upload photos, videos, or portfolios of your completed projects and services. 
+            High-quality media helps attract more clients!
+          </p>
 
-        <div id="progress" style="display:none;margin-top:12px">Uploading: <span id="pct">0%</span></div>
+          <form id="uploadForm">
+            <div class="upload-form-row">
+              <div>
+                <label>Project/Service Title</label>
+                <input name="title" type="text" placeholder="e.g., Website Redesign Project" required>
+              </div>
+              <div>
+                <label>Category</label>
+                <select name="category" required>
+                  <option value="">Select category</option>
+                  <option value="Computer">Computer</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Construction">Construction</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="Legal">Legal</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Agriculture">Agriculture</option>
+                  <option value="Transport">Transport</option>
+                  <option value="Business">Business</option>
+                  <option value="Hospitality">Hospitality</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
 
-        <div class="uploads">
-          <h4>Your uploads</h4>
-          <div id="uploadsList"></div>
+            <div class="upload-form-row full">
+              <div>
+                <label>Description</label>
+                <textarea name="description" rows="4" placeholder="Describe this project, what you did, and the results..."></textarea>
+              </div>
+            </div>
+
+            <div class="upload-form-row">
+              <div>
+                <label>Tags (comma-separated)</label>
+                <input name="tags" type="text" placeholder="e.g., web design, mobile app, quality work">
+              </div>
+            </div>
+
+            <div class="upload-form-row full">
+              <div class="file-input-wrapper">
+                <input id="fileInput" name="media" type="file" accept="image/*,video/*" required>
+                <label for="fileInput" class="file-input-label">
+                  <strong>📁 Choose a file</strong>
+                  <span>Click to select a photo, video, or document (Max 50MB)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="progress-bar" id="progressBar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+              <button class="btn" type="submit">Upload Work</button>
+              <button id="clearForm" class="btn ghost" type="button">Clear Form</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Portfolio Section -->
+        <div class="uploads-list">
+          <h4>🎨 Your Portfolio</h4>
+          <div id="uploadsList" style="min-height: 100px;">
+            <p class="muted" style="text-align: center; padding: 40px 20px;">
+              No uploads yet. Start by uploading your first project above!
+            </p>
+          </div>
         </div>
       </div>
-
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p class="muted">Keep your uploads under recommended size (e.g., 100MB) for best performance.</p>
+      <p>© Service Link Uganda — Connecting businesses with service providers.</p>
+      <p class="muted">Keep file sizes under 50MB for best performance.</p>
     </div>
   </footer>
 
