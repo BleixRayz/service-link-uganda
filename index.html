@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Service Link — Uganda</title>
+  <meta name="description" content="A modern, animated service link page for Service Link Uganda." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">Service Link<span class="accent">UG</span></a>
+      <div class="actions">
+        <button id="themeToggle" class="btn ghost" aria-pressed="false" title="Toggle theme">☀️/🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="blobs">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+      </div>
+      <div class="container hero-content">
+        <h1 class="title">Access the services that matter — all in one place</h1>
+        <p class="lead">Quick links to government services, support centers, and resources across Uganda. Fast, accessible, and beautifully simple.</p>
+        <div class="search-row">
+          <input id="search" class="search" placeholder="Search services (e.g. taxes, permits, health)" aria-label="Search services">
+        </div>
+      </div>
+    </section>
+
+    <section class="links container">
+      <h2 class="section-title">Popular links</h2>
+      <div id="linksGrid" class="grid">
+        <article class="card" data-name="Uganda Revenue Authority" data-url="https://www.ura.go.ug">
+          <div class="card-icon">🧾</div>
+          <h3 class="card-title">Uganda Revenue Authority</h3>
+          <p class="card-desc">Taxes, e-services and filing.</p>
+          <div class="card-actions">
+            <a class="btn" href="https://www.ura.go.ug" target="_blank" rel="noopener">Open</a>
+            <button class="btn ghost copy" title="Copy link">Copy</button>
+          </div>
+        </article>
+
+        <article class="card" data-name="KCCA" data-url="https://www.kcca.go.ug">
+          <div class="card-icon">🏙️</div>
+          <h3 class="card-title">KCCA</h3>
+          <p class="card-desc">City services, permits and planning.</p>
+          <div class="card-actions">
+            <a class="btn" href="https://www.kcca.go.ug" target="_blank" rel="noopener">Open</a>
+            <button class="btn ghost copy" title="Copy link">Copy</button>
+          </div>
+        </article>
+
+        <article class="card" data-name="Ministry of Health" data-url="https://health.go.ug">
+          <div class="card-icon">🩺</div>
+          <h3 class="card-title">Ministry of Health</h3>
+          <p class="card-desc">Health advisories and services.</p>
+          <div class="card-actions">
+            <a class="btn" href="https://health.go.ug" target="_blank" rel="noopener">Open</a>
+            <button class="btn ghost copy" title="Copy link">Copy</button>
+          </div>
+        </article>
+
+        <article class="card" data-name="eCitizen" data-url="#">
+          <div class="card-icon">📱</div>
+          <h3 class="card-title">eCitizen Portal</h3>
+          <p class="card-desc">Citizen services and e-forms.</p>
+          <div class="card-actions">
+            <a class="btn" href="#" target="_blank" rel="noopener">Open</a>
+            <button class="btn ghost copy" title="Copy link">Copy</button>
+          </div>
+        </article>
+
+      </div>
+
+      <div id="toast" class="toast" role="status" aria-live="polite">Link copied!</div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© Service Link Uganda — Built with ❤️. Customize this page in the repository to add your own links.</p>
+      <p>Tip: Enable GitHub Pages in repository settings to serve this as a static site.</p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
