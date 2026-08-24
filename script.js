@@ -136,3 +136,69 @@
   setTheme(saved === null ? true : saved === 'true');
 
 })();
+
+
+// Carousel initializer — lightweight, accessible
+(function initHeroCarousel(){
+  const carousel = document.getElementById('heroCarousel');
+  if(!carousel) return;
+
+  const track = carousel.querySelector('.carousel-track');
+  const slides = Array.from(track.children);
+  const prevBtn = carousel.querySelector('.carousel-btn.prev');
+  const nextBtn = carousel.querySelector('.carousel-btn.next');
+  const dotsEl = carousel.querySelector('.carousel-dots');
+
+  // Create indicator dots
+  slides.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', `Go to slide ${i+1}`);
+    btn.dataset.index = i;
+    if(i === 0) btn.classList.add('active');
+    dotsEl.appendChild(btn);
+  });
+  const dots = Array.from(dotsEl.children);
+
+  let current = 0;
+  let autoplayInterval = 4000;
+  let timer = null;
+  const setSlide = (index) => {
+    index = (index + slides.length) % slides.length;
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach(d => d.classList.remove('active'));
+    dots[index].classList.add('active');
+    current = index;
+  };
+
+  const next = () => setSlide(current + 1);
+  const prev = () => setSlide(current - 1);
+
+  nextBtn.addEventListener('click', () => { next(); restartTimer(); });
+  prevBtn.addEventListener('click', () => { prev(); restartTimer(); });
+
+  dots.forEach(d => d.addEventListener('click', (e) => {
+    setSlide(Number(e.currentTarget.dataset.index));
+    restartTimer();
+  }));
+
+  // Keyboard support
+  carousel.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowLeft') { prev(); restartTimer(); }
+    if(e.key === 'ArrowRight') { next(); restartTimer(); }
+  });
+
+  // Pause on hover/focus
+  const pause = () => { if(timer) { clearInterval(timer); timer = null; } };
+  const restartTimer = () => { pause(); timer = setInterval(next, autoplayInterval); };
+  carousel.addEventListener('mouseenter', pause);
+  carousel.addEventListener('focusin', pause);
+  carousel.addEventListener('mouseleave', restartTimer);
+  carousel.addEventListener('focusout', restartTimer);
+
+  // Start autoplay
+  restartTimer();
+
+  // Make carousel focusable for keyboard nav
+  carousel.tabIndex = 0;
+})();
